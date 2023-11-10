@@ -1,7 +1,15 @@
+use std::env;
 use std::process::Command;
 
+use os_release::OsRelease;
+
 pub fn run() {
-    println!("{}", get_art());
+    let left: String = get_art();
+    let user = env::var("USER").expect("USER env var not working");
+    let hostname = env::var("HOSTNAME").expect("HOSTNAME env var not working");
+    let os = OsRelease::new().unwrap().pretty_name;
+    let right: String = format!(" {user}@{hostname}\n {os}");
+    println!("{}", stitch(&left, &right));
 }
 
 fn get_art() -> String {
@@ -44,6 +52,8 @@ fn stitch<'a>(left: &'a str, right: &'a str) -> String {
 
 #[cfg(test)]
 mod tests {
+    use std::env;
+
     use super::*;
 
     #[test]
@@ -61,8 +71,26 @@ mod tests {
     }
 
     #[test]
-    fn art_command_works() {
+    fn get_art_works() {
         get_art();
+        assert!(true);
+    }
+
+    #[test]
+    fn get_user_works() {
+        let user = env::var("USER");
+        assert!(user.is_ok())
+    }
+
+    #[test]
+    fn get_hostname_works() {
+        let hostname = env::var("HOSTNAME");
+        assert!(hostname.is_ok())
+    }
+
+    #[test]
+    fn get_os_works() {
+        let _ = os_release::OsRelease::new().unwrap().pretty_name;
         assert!(true);
     }
 }
