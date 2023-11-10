@@ -1,7 +1,25 @@
+use std::process::Command;
+
+pub fn run() {
+    println!("{}", get_art());
+}
+
+fn get_art() -> String {
+    let output = Command::new("art_boxes")
+        .arg("4")
+        .arg("2")
+        .output().ok().unwrap().stdout;
+
+    String::from_utf8(output)
+        .unwrap()
+        .trim()
+        .to_owned()
+}
+
 /// # Panics
 ///
 /// Will panic if the two string slices do not have the same number of lines
-pub fn stitch<'a>(left: &'a str, right: &'a str) -> String {
+fn stitch<'a>(left: &'a str, right: &'a str) -> String {
     assert_eq!(left.lines().count(), right.lines().count());
 
     let num_lines = right.lines().count();
@@ -40,5 +58,11 @@ mod tests {
         let left  = "AB\nEF";
         let right = "CD\nGH";
         assert_eq!(stitch(left, right), "ABCD\nEFGH");
+    }
+
+    #[test]
+    fn art_command_works() {
+        get_art();
+        assert!(true);
     }
 }
