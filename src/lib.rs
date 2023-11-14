@@ -28,7 +28,6 @@ fn get_art() -> String {
 
     String::from_utf8(output)
         .unwrap()
-        .trim()
         .to_owned()
 }
 
