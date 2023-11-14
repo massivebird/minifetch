@@ -1,3 +1,3 @@
 fn main() {
-    my_fetch::run();
+    minifetch::run();
 }
