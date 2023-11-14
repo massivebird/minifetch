@@ -1,16 +1,19 @@
+use colored::Colorize;
+use os_release::OsRelease;
 use std::env;
 use std::process::Command;
-use os_release::OsRelease;
-use colored::Colorize;
 
 pub fn run() {
     // TODO colored data starts at the beginning and gets cut off...
     // how do I concat ColoredStrings together?
     let left = get_art();
 
-    let user = env::var("USER").expect("USER env var not working").blue();
-    let hostname = env::var("HOSTNAME").expect("HOSTNAME env var not working").blue();
-    let os = OsRelease::new().unwrap().pretty_name.white();
+    let user = env::var("USER")
+        .expect("USER env var not working").blue();
+    let hostname = env::var("HOSTNAME")
+        .expect("HOSTNAME env var not working").blue();
+    let os = OsRelease::new()
+        .unwrap().pretty_name.white();
 
     let right: String = format!(" {user}@{hostname}\n {os}");
 
@@ -95,7 +98,8 @@ mod tests {
 
     #[test]
     fn get_os_works() {
-        let _ = os_release::OsRelease::new().unwrap().pretty_name;
+        let _ = os_release::OsRelease::new()
+            .unwrap().pretty_name;
         assert!(true);
     }
 }
