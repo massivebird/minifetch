@@ -45,12 +45,12 @@ fn stitch<'a>(left: &'a str, right: &'a str) -> String {
 
     let mut result = String::new();
 
-    result.push_str(my_iterator(left, 0));
+    result.push_str(&left.lines().nth(0).unwrap().white().to_string());
     result.push_str(my_iterator(right, 0));
 
     for n in 1..num_lines {
         result.push('\n');
-        result.push_str(my_iterator(left, n));
+        result.push_str(&left.lines().nth(n).unwrap().white().to_string());
         result.push_str(my_iterator(right, n));
     }
 
