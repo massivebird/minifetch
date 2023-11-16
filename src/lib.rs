@@ -1,23 +1,22 @@
-use colored::Colorize;
+use colored::{Colorize, Color};
 use os_release::OsRelease;
 use std::env;
 use std::process::Command;
 
 pub fn run() {
-    // TODO colored data starts at the beginning and gets cut off...
-    // how do I concat ColoredStrings together?
     let left = get_art();
 
     let user = env::var("USER")
         .expect("USER env var not working").blue();
+    let symbol = "@".bright_white();
     let hostname = env::var("HOSTNAME")
         .expect("HOSTNAME env var not working").blue();
     let os = OsRelease::new()
         .unwrap().pretty_name.white();
 
-    let right: String = format!(" {user}@{hostname}\n {os}");
+    let right: String = format!(" {user}{symbol}{hostname}\n {os}");
 
-    println!("{}", stitch(&left, &right));
+    println!("{}", stitch(&left, &right, None));
 }
 
 fn get_art() -> String {
@@ -26,32 +25,30 @@ fn get_art() -> String {
         .arg("2")
         .output().ok().unwrap().stdout;
 
-    String::from_utf8(output)
-        .unwrap()
-        .to_owned()
+    String::from_utf8(output).unwrap()
 }
 
 /// # Panics
 ///
 /// Will panic if the two string slices do not have the same number of lines
-fn stitch<'a>(left: &'a str, right: &'a str) -> String {
+fn stitch<'a>(left: &'a str, right: &'a str, left_color: Option<Color>) -> String {
     assert_eq!(left.lines().count(), right.lines().count());
 
-    let num_lines = right.lines().count();
-
-    let my_iterator = |s: &'a str, n: usize| {
-        s.lines().nth(n).unwrap()
+    let get_nth_line = |s: &'a str, n: usize| {
+        match left_color {
+            None => String::from(s.lines().nth(n).unwrap()),
+            Some(c) => s.lines().nth(n).unwrap().color(c).to_string(),
+        }
     };
 
     let mut result = String::new();
+    result.push_str(&get_nth_line(left, 0));
+    result.push_str(&get_nth_line(right, 0));
 
-    result.push_str(&left.lines().nth(0).unwrap().white().to_string());
-    result.push_str(my_iterator(right, 0));
-
-    for n in 1..num_lines {
+    for n in 1..left.lines().count() {
         result.push('\n');
-        result.push_str(&left.lines().nth(n).unwrap().white().to_string());
-        result.push_str(my_iterator(right, n));
+        result.push_str(&get_nth_line(left, n));
+        result.push_str(&get_nth_line(right, n));
     }
 
     result
@@ -67,14 +64,14 @@ mod tests {
     fn stitch_1() {
         let left  = "L\nL";
         let right = "R\nR";
-        assert_eq!(stitch(left, right), "LR\nLR");
+        assert_eq!(stitch(left, right, None), "LR\nLR");
     }
 
     #[test]
     fn stitch_2() {
         let left  = "AB\nEF";
         let right = "CD\nGH";
-        assert_eq!(stitch(left, right), "ABCD\nEFGH");
+        assert_eq!(stitch(left, right, None), "ABCD\nEFGH");
     }
 
     #[test]
