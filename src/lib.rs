@@ -7,10 +7,12 @@ pub fn run() {
     let left = get_art();
 
     let user = env::var("USER")
-        .expect("USER env var not working").blue();
+        .unwrap_or("defaultuser".to_string())
+        .blue();
     let symbol = "@".bright_white();
     let hostname = env::var("HOSTNAME")
-        .expect("HOSTNAME env var not working").blue();
+        .unwrap_or("defaulthostname".to_string())
+        .blue();
     let os = OsRelease::new()
         .unwrap().pretty_name.white();
 
@@ -28,6 +30,8 @@ fn get_art() -> String {
     String::from_utf8(output).unwrap()
 }
 
+/// Prints two strings horizontally adjacent to each other.
+///
 /// # Panics
 ///
 /// Will panic if the two string slices do not have the same number of lines
