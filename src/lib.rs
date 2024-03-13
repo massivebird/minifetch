@@ -1,4 +1,4 @@
-use colored::{Colorize, Color};
+use colored::{Color, Colorize};
 use os_release::OsRelease;
 use std::env;
 use std::process::Command;
@@ -6,15 +6,12 @@ use std::process::Command;
 pub fn run() {
     let left = get_art();
 
-    let user = env::var("USER")
-        .unwrap_or("defaultuser".to_string())
-        .blue();
+    let user = env::var("USER").unwrap_or("defaultuser".to_string()).blue();
     let symbol = "@".bright_white();
     let hostname = env::var("HOSTNAME")
         .unwrap_or("defaulthostname".to_string())
         .blue();
-    let os = OsRelease::new()
-        .unwrap().pretty_name.white();
+    let os = OsRelease::new().unwrap().pretty_name.white();
 
     let right: String = format!(" {user}{symbol}{hostname}\n {os}");
 
@@ -25,7 +22,10 @@ fn get_art() -> String {
     let output = Command::new("art_boxes")
         .arg("4")
         .arg("2")
-        .output().ok().unwrap().stdout;
+        .output()
+        .ok()
+        .unwrap()
+        .stdout;
 
     String::from_utf8(output).unwrap()
 }
@@ -38,11 +38,9 @@ fn get_art() -> String {
 fn stitch<'a>(left: &'a str, right: &'a str, left_color: Option<Color>) -> String {
     assert_eq!(left.lines().count(), right.lines().count());
 
-    let get_nth_line = |s: &'a str, n: usize| {
-        match left_color {
-            None => String::from(s.lines().nth(n).unwrap()),
-            Some(c) => s.lines().nth(n).unwrap().color(c).to_string(),
-        }
+    let get_nth_line = |s: &'a str, n: usize| match left_color {
+        None => String::from(s.lines().nth(n).unwrap()),
+        Some(c) => s.lines().nth(n).unwrap().color(c).to_string(),
     };
 
     let mut result = String::new();
@@ -66,14 +64,14 @@ mod tests {
 
     #[test]
     fn stitch_1() {
-        let left  = "L\nL";
+        let left = "L\nL";
         let right = "R\nR";
         assert_eq!(stitch(left, right, None), "LR\nLR");
     }
 
     #[test]
     fn stitch_2() {
-        let left  = "AB\nEF";
+        let left = "AB\nEF";
         let right = "CD\nGH";
         assert_eq!(stitch(left, right, None), "ABCD\nEFGH");
     }
@@ -98,8 +96,7 @@ mod tests {
 
     #[test]
     fn get_os_works() {
-        let _ = os_release::OsRelease::new()
-            .unwrap().pretty_name;
+        let _ = os_release::OsRelease::new().unwrap().pretty_name;
         assert!(true);
     }
 }
