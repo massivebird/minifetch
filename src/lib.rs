@@ -6,10 +6,12 @@ use std::process::Command;
 pub fn run() {
     let left = get_art();
 
-    let user = env::var("USER").unwrap_or("defaultuser".to_string()).blue();
+    let user = env::var("USER")
+        .unwrap_or_else(|_| "defaultuser".to_string())
+        .blue();
     let symbol = "@".bright_white();
     let hostname = env::var("HOSTNAME")
-        .unwrap_or("defaulthostname".to_string())
+        .unwrap_or_else(|_| "defaulthostname".to_string())
         .blue();
     let os = OsRelease::new().unwrap().pretty_name.white();
 
@@ -38,9 +40,11 @@ fn get_art() -> String {
 fn stitch<'a>(left: &'a str, right: &'a str, left_color: Option<Color>) -> String {
     assert_eq!(left.lines().count(), right.lines().count());
 
-    let get_nth_line = |s: &'a str, n: usize| match left_color {
-        None => String::from(s.lines().nth(n).unwrap()),
-        Some(c) => s.lines().nth(n).unwrap().color(c).to_string(),
+    let get_nth_line = |s: &'a str, n: usize| {
+        left_color.map_or_else(
+            || String::from(s.lines().nth(n).unwrap()),
+            |c| s.lines().nth(n).unwrap().color(c).to_string(),
+        )
     };
 
     let mut result = String::new();
