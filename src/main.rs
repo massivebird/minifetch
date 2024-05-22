@@ -21,15 +21,12 @@ fn main() {
 }
 
 fn get_art() -> String {
-    let output = Command::new("art_boxes")
-        .arg("4")
-        .arg("2")
-        .output()
-        .ok()
-        .unwrap()
-        .stdout;
+    let output = Command::new("art_boxes").arg("4").arg("2").output().ok();
 
-    String::from_utf8(output).unwrap()
+    match output {
+        Some(x) => String::from_utf8(x.stdout).unwrap(),
+        None => String::from("\n\n"),
+    }
 }
 
 /// Prints two strings horizontally adjacent to each other.
