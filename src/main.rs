@@ -11,7 +11,9 @@ fn main() {
         .blue();
     let symbol = "@".bright_white();
     let hostname = env::var("HOSTNAME")
-        .unwrap_or_else(|_| "defaulthostname".to_string())
+        .or_else(|_| String::from_utf8(Command::new("hostname").output().unwrap().stdout))
+        .unwrap_or_else(|_| String::from("<missing hostname>"))
+        .trim_end()
         .blue();
     let os = OsRelease::new().unwrap().pretty_name.white();
 
