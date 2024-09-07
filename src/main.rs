@@ -82,7 +82,6 @@ mod tests {
     #[test]
     fn get_art_works() {
         get_art();
-        assert!(true);
     }
 
     #[test]
@@ -100,6 +99,5 @@ mod tests {
     #[test]
     fn get_os_works() {
         let _ = os_release::OsRelease::new().unwrap().pretty_name;
-        assert!(true);
     }
 }
