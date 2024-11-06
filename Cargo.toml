@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 colored = "2.0.4"
 os-release = "0.1.0"
+art-streets = { git = "https://github.com/massivebird/art-streets.git" }

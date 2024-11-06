@@ -4,7 +4,7 @@ use std::env;
 use std::process::Command;
 
 fn main() {
-    let left = get_art();
+    let left = art_streets::generate_art(4, 2);
 
     let user = env::var("USER")
         .unwrap_or_else(|_| "defaultuser".to_string())
@@ -23,15 +23,6 @@ fn main() {
     let right: String = format!(" {user}{symbol}{hostname}\n {os}");
 
     println!("{}", stitch(&left, &right, None));
-}
-
-fn get_art() -> String {
-    let output = Command::new("art_boxes").arg("4").arg("2").output().ok();
-
-    match output {
-        Some(x) => String::from_utf8(x.stdout).unwrap(),
-        None => String::from("\n\n"),
-    }
 }
 
 /// Prints two strings horizontally adjacent to each other.
