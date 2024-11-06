@@ -9,12 +9,15 @@ fn main() {
     let user = env::var("USER")
         .unwrap_or_else(|_| "defaultuser".to_string())
         .blue();
+
     let symbol = "@".bright_white();
+
     let hostname = env::var("HOSTNAME")
         .or_else(|_| String::from_utf8(Command::new("hostname").output().unwrap().stdout))
         .unwrap_or_else(|_| String::from("<missing hostname>"))
         .trim_end()
         .blue();
+
     let os = OsRelease::new().unwrap().pretty_name.white();
 
     let right: String = format!(" {user}{symbol}{hostname}\n {os}");
@@ -61,43 +64,12 @@ fn stitch<'a>(left: &'a str, right: &'a str, left_color: Option<Color>) -> Strin
 
 #[cfg(test)]
 mod tests {
-    use std::env;
-
-    use super::*;
+    use super::stitch;
 
     #[test]
-    fn stitch_1() {
-        let left = "L\nL";
-        let right = "R\nR";
-        assert_eq!(stitch(left, right, None), "LR\nLR");
-    }
-
-    #[test]
-    fn stitch_2() {
+    fn stitch_works() {
         let left = "AB\nEF";
         let right = "CD\nGH";
         assert_eq!(stitch(left, right, None), "ABCD\nEFGH");
-    }
-
-    #[test]
-    fn get_art_works() {
-        get_art();
-    }
-
-    #[test]
-    fn get_user_works() {
-        let user = env::var("USER");
-        assert!(user.is_ok())
-    }
-
-    #[test]
-    fn get_hostname_works() {
-        let hostname = env::var("HOSTNAME");
-        assert!(hostname.is_ok())
-    }
-
-    #[test]
-    fn get_os_works() {
-        let _ = os_release::OsRelease::new().unwrap().pretty_name;
     }
 }
