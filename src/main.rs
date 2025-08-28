@@ -7,14 +7,20 @@ fn main() {
     let left = art_streets::generate_art(4, 2);
 
     let user = env::var("USER")
-        .unwrap_or_else(|_| "defaultuser".to_string())
+        .unwrap_or_else(|_| "<missing user>".to_string())
         .blue();
 
     let symbol = "@".bright_white();
 
     let hostname = env::var("HOSTNAME")
-        .or_else(|_| String::from_utf8(Command::new("hostname").output().unwrap().stdout))
-        .unwrap_or_else(|_| String::from("<missing hostname>"))
+        .or_else(|_| {
+            Command::new("hostname")
+                .output()
+                .ok()
+                .and_then(|output| String::from_utf8(output.stdout).ok())
+                .ok_or(env::VarError::NotPresent)
+        })
+        .unwrap_or_else(|_| "<missing hostname>".to_string())
         .trim_end()
         .blue();
 
