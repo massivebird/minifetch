@@ -27,12 +27,8 @@ fn main() {
 
 /// Prints two strings horizontally adjacent to each other.
 ///
-/// # Panics
-///
-/// Will panic if the two string slices do not have the same number of lines
+/// Preferably, both input strings are of equal length. Otherwise, I have no idea what will happen.
 fn stitch<'a>(left: &'a str, right: &'a str, left_color: Option<Color>) -> String {
-    assert_eq!(left.lines().count(), right.lines().count());
-
     let get_nth_line = |s: &'a str, n: usize| {
         left_color.map_or_else(
             || String::from(s.lines().nth(n).unwrap()),
