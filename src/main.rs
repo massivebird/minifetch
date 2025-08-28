@@ -36,17 +36,17 @@ fn stitch<'a>(left: &'a str, right: &'a str, left_color: Option<Color>) -> Strin
         )
     };
 
-    let mut result = String::new();
-    result.push_str(&get_nth_line(left, 0));
-    result.push_str(&get_nth_line(right, 0));
+    let mut buf = String::new();
+    buf.push_str(&get_nth_line(left, 0));
+    buf.push_str(&get_nth_line(right, 0));
 
     for n in 1..left.lines().count() {
-        result.push('\n');
-        result.push_str(&get_nth_line(left, n));
-        result.push_str(&get_nth_line(right, n));
+        buf.push('\n');
+        buf.push_str(&get_nth_line(left, n));
+        buf.push_str(&get_nth_line(right, n));
     }
 
-    result
+    buf
 }
 
 #[cfg(test)]
