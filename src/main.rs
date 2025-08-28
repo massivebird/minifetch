@@ -1,7 +1,6 @@
 use colored::{Color, Colorize};
 use os_release::OsRelease;
-use std::env;
-use std::process::Command;
+use std::{env, process::Command};
 
 fn main() {
     let left = art_streets::generate_art(4, 2);
